@@ -99,42 +99,6 @@ def tagSeg(line, tag):
                 continue
     return WordList
 
-# 根据状态序列进行分词
-def tagSeg(line, tag):
-    WordList = []
-    Start = -1
-    Started = False
-
-    if len(tag) != len(line):
-        return None
-    if len(tag) == 1:                                           # 如果长度为一，说明单字成词
-        WordList.append(line[0])   
-    else:
-        if tag[-1] == 'B' or tag[-1] == 'M':                    # 去除一个词的最后一个字为B、M的情况(这些情况是不应该存在的)
-            if tag[-2] == 'B' or tag[-2] == 'M':
-                tag[-1] = 'S'
-            else:
-                tag[-1] = 'E'
-
-        for t in range(len(tag)):                               # 对于一个普通的词而言，首尾是BE，其他都是M
-            if tag[t] == 'S':
-                if Started:
-                    Started = False
-                    WordList.append(line[Start:t])
-                WordList.append(line[t])
-            elif tag[t] == 'B':
-                if Started:
-                    WordList.append(line[Start:t])
-                Start = t
-                Started = True
-            elif tag[t] == 'E':
-                Started = False
-                word = line[Start:t+1]
-                WordList.append(word)
-            elif tag[t] == 'M':
-                continue
-    return WordList
-
 
 # 测试集测试
 def test(filename): 
